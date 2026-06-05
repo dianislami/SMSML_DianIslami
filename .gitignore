@@ -16,6 +16,13 @@ venv/
 .venv/
 env/
 
+# Preprocessed datasets
+preprocessing/Dry_Bean_Dataset_preprocessing/
+Workflow-CI/MLProject/Dry_Bean_Dataset_preprocessing/
+
 # MLflow (jangan ikut ke repo K1)
 mlruns/
 mlartifacts/
+*.pkl
+*.joblib
+*.h5

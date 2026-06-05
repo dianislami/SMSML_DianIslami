@@ -1,0 +1,2 @@
+Isi file ini dengan link DagsHub kamu setelah setup, contoh:
+https://dagshub.com/username_kamu/Dry-Bean-Classification

@@ -1,0 +1,50 @@
+name: Automated Preprocessing Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'preprocessing/automate_DianIslami.py'
+      - 'Dry_Bean_Dataset_raw/**'
+  workflow_dispatch:   # bisa dijalankan manual dari GitHub UI
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          pip install pandas numpy scikit-learn openpyxl
+
+      - name: Run Preprocessing
+        run: |
+          cd preprocessing
+          python automate_DianIslami.py \
+            --input ../Dry_Bean_Dataset_raw/Dry_Bean_Dataset.xlsx \
+            --output Dry_Bean_Dataset_preprocessing
+
+      - name: Upload Preprocessed Dataset as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dry-bean-dataset_preprocessing
+          path: preprocessing/Dry_Bean_Dataset_preprocessing/
+          retention-days: 30
+
+      - name: Commit and Push Preprocessed Data
+        run: |
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add preprocessing/Dry_Bean_Dataset_preprocessing/
+          git diff --cached --quiet || git commit -m "chore: update preprocessed dataset [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
